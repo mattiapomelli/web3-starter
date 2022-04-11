@@ -1,0 +1,16 @@
+{
+  "name": "web3-starter",
+  "private": true,
+  "version": "1.0.0",
+  "author": "Mattia Pomelli",
+  "license": "MIT",
+  "workspaces": {
+    "packages": [
+      "packages/*"
+    ],
+    "nohoist": [
+      "**/hardhat",
+      "**/hardhat/**"
+    ]
+  }
+}
