@@ -24,6 +24,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 
+## Frontend ##
 # testing
 /frontend/coverage
 
@@ -33,3 +34,10 @@ yarn-error.log*
 
 # production
 /frontend/build
+
+
+## Hardhat ##
+hardhat/typechain
+hardhat/cache
+hardhat/artifacts
+hardhat/deployments
