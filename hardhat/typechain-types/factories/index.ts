@@ -2,3 +2,4 @@
 /* tslint:disable */
 /* eslint-disable */
 export { Greeter__factory } from "./Greeter__factory";
+export { Store__factory } from "./Store__factory";

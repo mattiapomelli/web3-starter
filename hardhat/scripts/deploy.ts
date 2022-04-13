@@ -4,12 +4,12 @@ async function main() {
   const [owner] = await ethers.getSigners()
 
   // Deploy contract
-  const Greeter = await ethers.getContractFactory('Greeter')
-  const greeter = await Greeter.deploy('Hello, Hardhat!')
+  const Store = await ethers.getContractFactory('Store')
+  const store = await Store.deploy('Hello, Hardhat!')
 
-  await greeter.deployed()
+  await store.deployed()
 
-  console.log('Greeter deployed to:', greeter.address)
+  console.log('Store deployed to:', store.address)
   console.log('Deployed by:', owner.address)
 }
 

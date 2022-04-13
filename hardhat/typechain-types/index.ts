@@ -2,5 +2,7 @@
 /* tslint:disable */
 /* eslint-disable */
 export type { Greeter } from "./Greeter";
+export type { Store } from "./Store";
 export * as factories from "./factories";
 export { Greeter__factory } from "./factories/Greeter__factory";
+export { Store__factory } from "./factories/Store__factory";
