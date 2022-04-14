@@ -1,44 +1,105 @@
-import type { NextPage } from 'next'
 import { useEffect, useState } from 'react'
+import type { NextPage } from 'next'
+
+import { ethers } from 'ethers'
+
+import contractAbi from '../artifacts/contracts/Store.sol/Store.json'
+import { useWeb3Context } from '../contexts/Web3Provider'
+
+const contractAddress = '0x5fbdb2315678afecb367f032d93f642f64180aa3'
 
 const Home: NextPage = () => {
-  const [account, setAccount] = useState(null)
+  const {
+    active,
+    provider,
+    account,
+    chainId,
+    error,
+    balance,
+    connect,
+    disconnect,
+  } = useWeb3Context()
+
+  const [data, setData] = useState('')
+  const [text, setText] = useState('')
 
   useEffect(() => {
-    const getConnectedAccount = async () => {
-      if (!window.ethereum) return
-      const accounts = await window.ethereum.request({ method: 'eth_accounts' })
+    const getData = async () => {
+      if (active) {
+        const contract = new ethers.Contract(
+          contractAddress,
+          contractAbi.abi,
+          provider
+        )
 
-      if (accounts.length !== 0) {
-        setAccount(accounts[0])
+        const data = await contract.getData()
+        setData(data)
       }
     }
 
-    getConnectedAccount()
-  }, [])
+    getData()
+  }, [provider, active])
 
-  const connectWallet = async () => {
-    try {
-      if (!window.ethereum) return
-      const accounts = await window.ethereum.request({
-        method: 'eth_requestAccounts',
-      })
+  const execute = async () => {
+    if (active && provider) {
+      const signer = provider.getSigner()
+      const contract = new ethers.Contract(
+        contractAddress,
+        contractAbi.abi,
+        signer
+      )
 
-      setAccount(accounts[0])
-    } catch (error) {
-      console.log(error)
+      try {
+        await contract.setData(text)
+      } catch (error) {
+        console.log(error)
+      }
     }
   }
 
   return (
-    <div>
-      <button
-        onClick={connectWallet}
-        className="py-2 px-4 bg-blue-500 text-white rounded-full"
-      >
-        Connect
-      </button>
-      <h1>{account}</h1>
+    <div className="flex flex-col gap-4 justify-center items-center min-h-screen">
+      <div>
+        {active ? (
+          <>
+            <h1 className="text-lg">
+              Connected as: <span className="font-bold">{account}</span>
+            </h1>
+            <p>Chain Id: {chainId}</p>
+            <p>Balance: {balance}</p>
+            <button
+              onClick={disconnect}
+              className="py-2 px-4 bg-blue-500 text-white rounded-full"
+            >
+              Disconnect
+            </button>
+          </>
+        ) : (
+          <button
+            onClick={connect}
+            className="py-2 px-4 bg-blue-500 text-white rounded-full"
+          >
+            Connect
+          </button>
+        )}
+      </div>
+      <div className="flex gap-1">
+        <input
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+          className="bg-gray-300 py-2 px-4 rounded-full"
+        />
+        <button
+          onClick={execute}
+          className="py-2 px-4 bg-blue-500 text-white rounded-full"
+        >
+          Execute
+        </button>
+      </div>
+      <div>
+        <p className="text-lg">Data: {data}</p>
+      </div>
+      {error && <div className="text-red-500">{error.message}</div>}
     </div>
   )
 }
