@@ -23,6 +23,7 @@ interface Web3ContextValue {
   balance: number
   connect: () => void
   disconnect: () => void
+  loading: boolean
 }
 
 const Web3Context = createContext<Web3ContextValue | undefined>(undefined)
@@ -42,6 +43,7 @@ const Web3ContextProvider = ({ children }: Web3ProviderProps) => {
     error,
   } = useWeb3React<providers.Web3Provider>()
 
+  const [loading, setLoading] = useState(true)
   const [disconnected, setDisconnected] = useState(false)
   const [balance, setBalance] = useState(0)
 
@@ -52,10 +54,11 @@ const Web3ContextProvider = ({ children }: Web3ProviderProps) => {
         const isAuthorized = await injected.isAuthorized()
 
         if (isAuthorized && !active) {
-          await activate(injected)
+          await activate(injected, undefined, true)
         }
+        setLoading(false)
       } catch (error) {
-        console.log(error)
+        setLoading(false)
       }
     }
 
@@ -81,7 +84,7 @@ const Web3ContextProvider = ({ children }: Web3ProviderProps) => {
   // Connect to wallet
   const connect = async () => {
     try {
-      await activate(injected)
+      await activate(injected, undefined, true)
     } catch (error) {
       console.error(error)
     }
@@ -91,7 +94,7 @@ const Web3ContextProvider = ({ children }: Web3ProviderProps) => {
   const disconnect = async () => {
     try {
       setDisconnected(true)
-      await deactivate()
+      deactivate()
     } catch (error) {
       console.error(error)
     }
@@ -108,6 +111,7 @@ const Web3ContextProvider = ({ children }: Web3ProviderProps) => {
         connect,
         disconnect,
         balance,
+        loading,
       }}
     >
       {children}
