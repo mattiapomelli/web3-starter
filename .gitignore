@@ -38,6 +38,7 @@ yarn-error.log*
 
 ## Hardhat ##
 hardhat/typechain
+hardhat/typechain-types
 hardhat/cache
 hardhat/artifacts
 hardhat/deployments

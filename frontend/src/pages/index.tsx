@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import type { NextPage } from 'next'
 
-import contractAbi from '../artifacts/contracts/Store.sol/Store.json'
+import contractAbi from '../abis/contracts/Store.json'
 import { useWeb3Context } from '../contexts/Web3Provider'
 import WalletStatus from '../components/WalletStatus'
 import useContract from '../hooks/useContract'

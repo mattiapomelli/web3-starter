@@ -7,7 +7,7 @@ contract Store {
     string private data;
 
     constructor(string memory _data) {
-        console.log("Deploying Store with data:", _data);
+        console.log("Deploying Store with data: ", _data);
         data = _data;
     }
 
