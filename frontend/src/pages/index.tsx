@@ -5,6 +5,7 @@ import { ethers } from 'ethers'
 
 import contractAbi from '../artifacts/contracts/Store.sol/Store.json'
 import { useWeb3Context } from '../contexts/Web3Provider'
+import WalletStatus from '../components/WalletStatus'
 
 const contractAddress = '0x5fbdb2315678afecb367f032d93f642f64180aa3'
 
@@ -60,28 +61,7 @@ const Home: NextPage = () => {
   return (
     <div className="flex flex-col gap-4 justify-center items-center min-h-screen">
       <div>
-        {active ? (
-          <>
-            <h1 className="text-lg">
-              Connected as: <span className="font-bold">{account}</span>
-            </h1>
-            <p>Chain Id: {chainId}</p>
-            <p>Balance: {balance}</p>
-            <button
-              onClick={disconnect}
-              className="py-2 px-4 bg-blue-500 text-white rounded-full"
-            >
-              Disconnect
-            </button>
-          </>
-        ) : (
-          <button
-            onClick={connect}
-            className="py-2 px-4 bg-blue-500 text-white rounded-full"
-          >
-            Connect
-          </button>
-        )}
+        <WalletStatus />
       </div>
       <div className="flex gap-1">
         <input
