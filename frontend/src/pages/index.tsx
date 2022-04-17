@@ -1,55 +1,34 @@
 import { useEffect, useState } from 'react'
 import type { NextPage } from 'next'
 
-import { ethers } from 'ethers'
-
 import contractAbi from '../artifacts/contracts/Store.sol/Store.json'
 import { useWeb3Context } from '../contexts/Web3Provider'
 import WalletStatus from '../components/WalletStatus'
+import useContract from '../hooks/useContract'
 
 const contractAddress = '0x5fbdb2315678afecb367f032d93f642f64180aa3'
 
 const Home: NextPage = () => {
-  const {
-    active,
-    provider,
-    account,
-    chainId,
-    error,
-    balance,
-    connect,
-    disconnect,
-  } = useWeb3Context()
+  const { active, provider, error } = useWeb3Context()
 
   const [data, setData] = useState('')
   const [text, setText] = useState('')
 
+  const contract = useContract(contractAddress, contractAbi.abi)
+
   useEffect(() => {
     const getData = async () => {
-      if (active) {
-        const contract = new ethers.Contract(
-          contractAddress,
-          contractAbi.abi,
-          provider
-        )
-
+      if (active && contract) {
         const data = await contract.getData()
         setData(data)
       }
     }
 
     getData()
-  }, [provider, active])
+  }, [provider, active, contract])
 
   const execute = async () => {
-    if (active && provider) {
-      const signer = provider.getSigner()
-      const contract = new ethers.Contract(
-        contractAddress,
-        contractAbi.abi,
-        signer
-      )
-
+    if (active && provider && contract) {
       try {
         await contract.setData(text)
       } catch (error) {
