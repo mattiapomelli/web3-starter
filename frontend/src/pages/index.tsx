@@ -5,6 +5,7 @@ import contractAbi from '../abis/contracts/Store.json'
 import { useWeb3Context } from '../contexts/Web3Provider'
 import WalletStatus from '../components/WalletStatus'
 import useContract from '../hooks/useContract'
+import { Store } from '../abis/types'
 
 const contractAddress = '0x5fbdb2315678afecb367f032d93f642f64180aa3'
 
@@ -14,7 +15,7 @@ const Home: NextPage = () => {
   const [data, setData] = useState('')
   const [text, setText] = useState('')
 
-  const contract = useContract(contractAddress, contractAbi.abi)
+  const contract = useContract<Store>(contractAddress, contractAbi.abi)
 
   useEffect(() => {
     const getData = async () => {

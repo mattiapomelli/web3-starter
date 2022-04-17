@@ -1,12 +1,14 @@
 import { useMemo } from 'react'
 import { ContractInterface, ethers } from 'ethers'
+import { Contract } from '@ethersproject/contracts'
+
 import { useWeb3Context } from '../contexts/Web3Provider'
 
-const useContract = (
+const useContract = <T extends Contract = Contract>(
   address: string,
   abi: ContractInterface,
   withSigner = true
-) => {
+): T | null => {
   const { provider, account } = useWeb3Context()
 
   const contract = useMemo(() => {
@@ -14,7 +16,7 @@ const useContract = (
       withSigner && account ? provider?.getSigner() : provider
 
     try {
-      return new ethers.Contract(address, abi, providerOrSigner)
+      return new ethers.Contract(address, abi, providerOrSigner) as T
     } catch (error) {
       return null
     }
