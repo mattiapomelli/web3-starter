@@ -17,7 +17,7 @@ const Home: NextPage = () => {
   const [text, setText] = useState('')
 
   const contract = useContract<Store>(contractAddress, contractAbi.abi)
-  const { handleTransaction, waiting, error: txError } = useTransaction()
+  const { handleTransaction, pending, error: txError } = useTransaction()
 
   useEffect(() => {
     const getData = async () => {
@@ -55,7 +55,7 @@ const Home: NextPage = () => {
           Execute
         </button>
       </div>
-      <div>{waiting && <p>Waiting for confirmation</p>}</div>
+      <div>{pending && <p>Waiting for confirmation</p>}</div>
       <div>{txError && <p>Something went wrong</p>}</div>
       <div>
         <p className="text-lg">Data: {data}</p>

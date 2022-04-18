@@ -3,6 +3,7 @@ import jazzicon from '@metamask/jazzicon'
 
 import { useWeb3Context } from '../contexts/Web3Provider'
 import { UnsupportedChainIdError } from '@web3-react/core'
+import Address from './Address'
 
 const WalletStatus = () => {
   const { active, account, balance, connect, error } = useWeb3Context()
@@ -30,10 +31,10 @@ const WalletStatus = () => {
     return <div className="text-red-500">Wrong network</div>
   }
 
-  if (active) {
+  if (active && account) {
     return (
       <div>
-        {balance} - {account}
+        {balance} - <Address address={account} />
         <span ref={iconRef} />
       </div>
     )

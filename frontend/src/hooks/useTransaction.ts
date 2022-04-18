@@ -6,7 +6,7 @@ type Transaction = () => Promise<ContractTransaction>
 
 const useTransaction = () => {
   const { active } = useWeb3Context()
-  const [waiting, setWaiting] = useState(false)
+  const [pending, setPending] = useState(false)
   const [error, setError] = useState<Error | null>(null)
 
   const handleTransaction = async (transaction: Transaction) => {
@@ -15,9 +15,9 @@ const useTransaction = () => {
     try {
       const tx = await transaction()
 
-      setWaiting(true)
+      setPending(true)
       const res = await tx.wait()
-      setWaiting(false)
+      setPending(false)
 
       return res
     } catch (error) {
@@ -29,7 +29,7 @@ const useTransaction = () => {
   return {
     handleTransaction,
     error,
-    waiting,
+    pending,
   }
 }
 
