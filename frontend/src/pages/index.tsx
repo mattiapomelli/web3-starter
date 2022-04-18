@@ -6,6 +6,7 @@ import { useWeb3Context } from '../contexts/Web3Provider'
 import WalletStatus from '../components/WalletStatus'
 import useContract from '../hooks/useContract'
 import { Store } from '../abis/types'
+import useTransaction from '../hooks/useTransaction'
 
 const contractAddress = '0x5fbdb2315678afecb367f032d93f642f64180aa3'
 
@@ -16,6 +17,7 @@ const Home: NextPage = () => {
   const [text, setText] = useState('')
 
   const contract = useContract<Store>(contractAddress, contractAbi.abi)
+  const { handleTransaction, waiting, error: txError } = useTransaction()
 
   useEffect(() => {
     const getData = async () => {
@@ -29,13 +31,10 @@ const Home: NextPage = () => {
   }, [provider, active, contract])
 
   const execute = async () => {
-    if (active && provider && contract) {
-      try {
-        await contract.setData(text)
-      } catch (error) {
-        console.log(error)
-      }
-    }
+    if (!contract) return
+
+    const res = await handleTransaction(() => contract.setData(text))
+    console.log(res)
   }
 
   return (
@@ -56,6 +55,8 @@ const Home: NextPage = () => {
           Execute
         </button>
       </div>
+      <div>{waiting && <p>Waiting for confirmation</p>}</div>
+      <div>{txError && <p>Something went wrong</p>}</div>
       <div>
         <p className="text-lg">Data: {data}</p>
       </div>

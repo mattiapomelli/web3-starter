@@ -12,8 +12,10 @@ const useContract = <T extends Contract = Contract>(
   const { provider, account } = useWeb3Context()
 
   const contract = useMemo(() => {
+    if (!provider) return null
+
     const providerOrSigner =
-      withSigner && account ? provider?.getSigner() : provider
+      withSigner && account ? provider.getSigner() : provider
 
     try {
       return new ethers.Contract(address, abi, providerOrSigner) as T
