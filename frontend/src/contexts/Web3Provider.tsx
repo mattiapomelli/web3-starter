@@ -37,14 +37,11 @@ const Web3ContextProvider = ({ children }: Web3ProviderProps) => {
     account,
     chainId,
     error,
-    setError,
   } = useWeb3React<providers.Web3Provider>()
 
   const [loading, setLoading] = useState(true)
   const [disconnected, setDisconnected] = useState(false)
   const [balance, setBalance] = useState(0)
-
-  console.log('Error: ', error)
 
   // Connect wallet on load
   useEffect(() => {
@@ -82,21 +79,13 @@ const Web3ContextProvider = ({ children }: Web3ProviderProps) => {
 
   // Connect to wallet
   const connect = async () => {
-    try {
-      await activate(injected, undefined, true)
-    } catch (err: any) {
-      setError(err)
-    }
+    await activate(injected)
   }
 
   // Disconnect wallet
-  const disconnect = async () => {
-    try {
-      setDisconnected(true)
-      deactivate()
-    } catch (err: any) {
-      setError(err)
-    }
+  const disconnect = () => {
+    setDisconnected(true)
+    deactivate()
   }
 
   return (
