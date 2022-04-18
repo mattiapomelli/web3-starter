@@ -2,9 +2,10 @@ import { useLayoutEffect, useMemo, useRef } from 'react'
 import jazzicon from '@metamask/jazzicon'
 
 import { useWeb3Context } from '../contexts/Web3Provider'
+import { UnsupportedChainIdError } from '@web3-react/core'
 
 const WalletStatus = () => {
-  const { active, account, balance, connect } = useWeb3Context()
+  const { active, account, balance, connect, error } = useWeb3Context()
 
   const iconRef = useRef<HTMLSpanElement>(null)
   const icon = useMemo(
@@ -24,6 +25,10 @@ const WalletStatus = () => {
       }
     }
   }, [icon, iconRef])
+
+  if (error && error instanceof UnsupportedChainIdError) {
+    return <div className="text-red-500">Wrong network</div>
+  }
 
   if (active) {
     return (

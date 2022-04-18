@@ -5,14 +5,10 @@ import {
   ReactNode,
   useContext,
 } from 'react'
-
 import { ethers, providers } from 'ethers'
 import { useWeb3React } from '@web3-react/core'
-import { InjectedConnector } from '@web3-react/injected-connector'
 
-const injected = new InjectedConnector({
-  supportedChainIds: [31337],
-})
+import { injected } from '../utils/connectors'
 
 interface Web3ContextValue {
   provider?: providers.Web3Provider
@@ -41,11 +37,14 @@ const Web3ContextProvider = ({ children }: Web3ProviderProps) => {
     account,
     chainId,
     error,
+    setError,
   } = useWeb3React<providers.Web3Provider>()
 
   const [loading, setLoading] = useState(true)
   const [disconnected, setDisconnected] = useState(false)
   const [balance, setBalance] = useState(0)
+
+  console.log('Error: ', error)
 
   // Connect wallet on load
   useEffect(() => {
@@ -85,8 +84,8 @@ const Web3ContextProvider = ({ children }: Web3ProviderProps) => {
   const connect = async () => {
     try {
       await activate(injected, undefined, true)
-    } catch (error) {
-      console.error(error)
+    } catch (err: any) {
+      setError(err)
     }
   }
 
@@ -95,8 +94,8 @@ const Web3ContextProvider = ({ children }: Web3ProviderProps) => {
     try {
       setDisconnected(true)
       deactivate()
-    } catch (error) {
-      console.error(error)
+    } catch (err: any) {
+      setError(err)
     }
   }
 
